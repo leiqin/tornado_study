@@ -30,8 +30,8 @@ class Loop(object):
 
     def start(self):
         while True:
-            # [(fd, events), (fd, events)]
-            event_pairs = self._impl.poll(100)
+            # return [(fd, events), (fd, events)] timeout in second
+            event_pairs = self._impl.poll(0.1)
             for fd, events in event_pairs:
                 fd_obj, handler_func = self._handlers[fd]
                 handler_func(fd_obj, events)

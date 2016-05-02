@@ -15,9 +15,5 @@ def handler(name, sock):
                 print 'handler %s recv end - - - \n' % name
                 break
 
-def main():
-    handler('A', get_sock())
-    handler('B', get_sock())
-
-if __name__ == '__main__':
-    main()
+handler('A', get_sock())
+handler('B', get_sock())
