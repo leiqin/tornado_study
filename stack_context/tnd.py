@@ -52,8 +52,8 @@ class StackContext(object):
             # Note that this check comes after restoring _state.context
             # so that if it fails things are left in a (relatively)
             # consistent state.
-            print '* * * stack context inconsistency StackContext.__exit__ * * *'
             if final_contexts is not self.new_contexts:
+                print '* * * stack context inconsistency StackContext.__exit__ * * *'
                 raise Exception(
                     'stack_context inconsistency (may be caused by yield '
                     'within a "with StackContext" block)')
@@ -91,6 +91,9 @@ def wrap(func):
     wapper._wraped = True
     return wapper
 
+def run_with_stack_context(context, func):
+    with context:
+        return func()
         
 def coroutine(func):
     @functools.wraps(func)
@@ -131,7 +134,7 @@ def _handle_generator(future, gen, last_value):
             _handle_generator(future, gen, next_value)
         except StopIteration as e:
             future.set_result(e.message)
-    last_value.add_done_callback(callback)
+    Loop.current().add_future(last_value, callback)
 
 class Future(object):
 
@@ -232,9 +235,9 @@ class Loop(object):
     def _run_callback(self, cb):
         cb()
 
-
     def add_future(self, future, callback):
-        future.add_done_callback(lambda f: self.add_callback(wrap(callback), f))
+        callback = wrap(callback)
+        future.add_done_callback(lambda f: self.add_callback(callback, f))
 
     def start(self):
         while True:
