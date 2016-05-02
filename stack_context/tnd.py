@@ -52,6 +52,7 @@ class StackContext(object):
             # Note that this check comes after restoring _state.context
             # so that if it fails things are left in a (relatively)
             # consistent state.
+            print '* * * stack context inconsistency StackContext.__exit__ * * *'
             if final_contexts is not self.new_contexts:
                 raise Exception(
                     'stack_context inconsistency (may be caused by yield '
@@ -101,7 +102,8 @@ def coroutine(func):
                 orig_stack_contexts = _state.contexts
                 first_value = res.send(None)
                 if orig_stack_contexts is not _state.contexts:
-                    print 'StackContext inconsistency'
+                    print '* * * stack context inconsistency coroutine.wapper * * *'
+                    # not handle exception
                     raise Exception(
                                 'stack_context inconsistency (probably caused '
                                 'by yield within a "with StackContext" block)')
@@ -121,7 +123,8 @@ def _handle_generator(future, gen, last_value):
             orig_stack_contexts = _state.contexts
             next_value = gen.send(gen_fu.result())
             if orig_stack_contexts is not _state.contexts:
-                print 'StackContext inconsistency'
+                print '* * * stack context inconsistency _handle_generator * * *'
+                # not handle exception
                 raise Exception(
                             'stack_context inconsistency (probably caused '
                             'by yield within a "with StackContext" block)')
@@ -228,6 +231,7 @@ class Loop(object):
 
     def _run_callback(self, cb):
         cb()
+
 
     def add_future(self, future, callback):
         future.add_done_callback(lambda f: self.add_callback(wrap(callback), f))
