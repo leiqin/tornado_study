@@ -27,6 +27,7 @@ def _handle_generator(future, gen, last_value):
     def callback(gen_fu):
         try:
             next_value = gen.send(gen_fu.result())
+            _handle_generator(future, gen, next_value)
         except StopIteration as e:
             future.set_result(e.message)
     last_value.add_done_callback(callback)
