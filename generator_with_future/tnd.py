@@ -106,7 +106,7 @@ class Loop(object):
         heapq.heappush(self._timeout_callbacks, tc)
 
     def _run_callback(self, cb):
-        res = cb()
+        cb()
 
     def add_future(self, future, callback):
         future.add_done_callback(callback)
