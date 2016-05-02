@@ -29,4 +29,4 @@ use yield replace callback
 handler and callback
 --------------------
 
-merge handler and callback
+combine handler and callback
