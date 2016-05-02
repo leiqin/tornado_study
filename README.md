@@ -30,3 +30,8 @@ handler and callback
 --------------------
 
 combine handler and callback
+
+stack context
+-------------
+
+use stack context to make sure when func call and when func run has the same contexts
